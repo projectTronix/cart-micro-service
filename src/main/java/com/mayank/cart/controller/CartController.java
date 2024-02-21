@@ -23,47 +23,32 @@ public class CartController {
     private final CartService cartService;
     private final LogManager logManager = LogManager.getLogManager();
     private final Logger logger = logManager.getLogger(Logger.GLOBAL_LOGGER_NAME);
-
-    @PostMapping("/add")
-    public CustomResponse addToCart(@RequestBody @Valid AddToCartRequest request) {
+    @GetMapping("/view/{id}")
+    public ResponseEntity<List<CartItem>> viewCart(@PathVariable("id") String userEmail) {
         try {
-            boolean status = cartService.addToCart(request);
-            if (!status) throw new Exception();
-            logger.log(Level.INFO, "Product added Successfully.");
-            return new CustomResponse("Product added Successfully.", HttpStatus.OK);
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Encountered a problem while adding product to cart -- addToProduct in CartController. - " + e.getMessage());
-            return new CustomResponse("Encountered a problem while adding product to cart.", HttpStatus.BAD_REQUEST);
-        }
-    }
-    @GetMapping("/view")
-    public ResponseEntity<List<CartItem>> viewCart(@RequestBody @Valid ViewCartRequest request) {
-        try {
-            String userEmail = request.getUserEmail();
             Cart cart = cartService.getCartByUserEmail(userEmail);
             List<CartItem> items = cartService.getAllCartItemsByID(cart.getId());
-            logger.log(Level.INFO, "Cart of User fetched Successfully.");
+            logger.log(Level.INFO, "Cart of user fetched Successfully.");
             return new ResponseEntity<>(items, HttpStatus.OK);
-        } catch (Exception e) {
-            logger.log(Level.WARNING, "Encountered a problem while fetching cart of user - viewCart in CartController :" + e.getMessage());
-            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.NOT_FOUND);
+        } catch(Exception e) {
+            logger.log(Level.WARNING, "Encountered a problem while fetching cart of user - viewCart in CartController " + e.getMessage());
+            return new ResponseEntity<>(new ArrayList<>(), HttpStatus.OK);
         }
     }
-    @DeleteMapping("/delete-item")
-    public CustomResponse deleteItem(@RequestBody @Valid DeleteItemRequest request) {
+    @PostMapping("/update")
+    public CustomResponse updateCartItem(@RequestBody @Valid UpdateCartRequest request) {
         try {
-            String productId = request.getProductId();
-            String userEmail = request.getUserEmail();
-            boolean status = cartService.deleteItem(request);
+            boolean status = cartService.updateCartItem(request);
             if(!status) {
                 throw new Exception();
             }
-            logger.log(Level.INFO, "Product deleted Successfully.");
-            return new CustomResponse("Product deleted successfully.", HttpStatus.OK);
+            logger.log(Level.INFO, "Product updated Successfully in cart.");
+            return new CustomResponse("Product updated Successfully in cart.", HttpStatus.OK);
         }
         catch(Exception e) {
-            logger.log(Level.WARNING, "Encountered a problem while deleting the product from cart. - deleteItem in CartController - " + e.getMessage());
-            return new CustomResponse("Encountered a problem while deleting the product from cart.", HttpStatus.BAD_REQUEST);
+            logger.log(Level.WARNING, "Encountered a problem while updating the product from cart. - updateCartItem in CartController - " + e.getMessage());
+            return new CustomResponse("Encountered a problem while updating the product from cart.", HttpStatus.BAD_REQUEST);
         }
     }
+
 }

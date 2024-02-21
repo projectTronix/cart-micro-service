@@ -1,6 +1,5 @@
 package com.mayank.cart.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -13,11 +12,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Valid
-public class AddToCartRequest {
+public class UpdateCartRequest {
     @NotNull(message = "Product Id must not be Null.")
     @NotBlank(message = "Product Id must not be blank.")
     private String productId;
-    @Positive(message = "Quantity must be greater than zero.")
+    @PositiveOrZero(message = "Quantity must be greater than or equal to zero.")
     @NotNull(message = "Quantity must not be null.")
     private Integer quantity;
     @NotNull(message = "User Email must not be Null.")

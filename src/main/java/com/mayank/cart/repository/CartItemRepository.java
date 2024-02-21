@@ -13,11 +13,11 @@ import java.util.Optional;
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     List<CartItem> findAllByCartId(Integer cartId);
-
-    Optional<CartItem> findByProductId(String productId);
+    @Query(value = "SELECT * FROM cart_items c where c.cart_id = :cart_id AND c.product_id = :product_id", nativeQuery = true)
+    Optional<CartItem> findByProductIdAndCartId(@Param("cart_id") Integer cartId, @Param("product_id") String productId);
     @Modifying // It means it's not a select statement
     @Query(value = "DELETE FROM cart_items c where c.cart_id = :cart_id AND c.product_id = :product_id", nativeQuery = true)
-    Integer deleteByProductIdAndCartId(@Param("product_id") String productId, @Param("cart_id") Integer cartId);
+    Integer deleteByProductIdAndCartId(@Param("cart_id") Integer cartId, @Param("product_id") String productId);
     @Modifying // It means it's not a select statement
     @Query(value = "UPDATE cart_items c SET c.quantity = :quantity WHERE c.cart_id = :cart_id AND c.product_id = :product_id", nativeQuery = true)
     void updateQuantityByProductIdAndCartId(@Param("quantity") Integer newQuantityInCart, @Param("product_id") String productId, @Param("cart_id") Integer id);
