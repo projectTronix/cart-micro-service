@@ -32,9 +32,9 @@ public class CartServiceImpl implements CartService{
         }
     }
     @Override
-    public boolean updateCartItem(UpdateCartRequest request) throws Exception {
+    public boolean updateCartItem(UpdateCartRequest request, String userEmail) throws Exception {
         try {
-            Cart cart = getCartByUserEmail(request.getUserEmail());
+            Cart cart = getCartByUserEmail(userEmail);
             String productId = request.getProductId();
             Integer quantity = request.getQuantity();
             long status = 1;
@@ -58,6 +58,23 @@ public class CartServiceImpl implements CartService{
             throw new Exception(e.getMessage());
         }
     }
+
+    @Override
+    public boolean deleteCartByUserEmail(String userEmail) throws Exception {
+        try {
+            Optional<Cart> opt = cartRepository.findByUserEmail(userEmail);
+            if(opt.isEmpty()) {
+                logger.log(Level.WARNING, "Cart already empty.");
+                return false;
+            }
+            cartRepository.deleteByUserEmail(userEmail);
+            return cartRepository.findByUserEmail(userEmail).isEmpty();
+        } catch(Exception e) {
+            logger.log(Level.WARNING, "Encountered a problem while deleting address -- deleteAddress in AddressService. - " + e.getMessage());
+            throw new Exception("Error while deleting address.");
+        }
+    }
+
     @Override
     public Cart getCartByUserEmail(String userEmail) throws Exception {
         try {

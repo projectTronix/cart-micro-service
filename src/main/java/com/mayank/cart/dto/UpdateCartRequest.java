@@ -19,10 +19,4 @@ public class UpdateCartRequest {
     @PositiveOrZero(message = "Quantity must be greater than or equal to zero.")
     @NotNull(message = "Quantity must not be null.")
     private Integer quantity;
-    @NotNull(message = "User Email must not be Null.")
-    @NotBlank(message = "User Email must not be blank.")
-    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
-            flags = Pattern.Flag.CASE_INSENSITIVE,
-            message = "Please provide a valid email.")
-    private String userEmail;
 }

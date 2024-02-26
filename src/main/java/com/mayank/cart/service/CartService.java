@@ -14,5 +14,7 @@ public interface CartService {
     Cart getCartByUserEmail(String userEmail) throws Exception;
     List<CartItem> getAllCartItemsByID(Integer cartId) throws Exception;
     Optional<CartItem> findProductInCart(Integer cartId, String productId) throws Exception;
-    boolean updateCartItem(UpdateCartRequest request) throws Exception;
+    boolean updateCartItem(UpdateCartRequest request, String userEmail) throws Exception;
+
+    boolean deleteCartByUserEmail(String userEmail) throws Exception;
 }
