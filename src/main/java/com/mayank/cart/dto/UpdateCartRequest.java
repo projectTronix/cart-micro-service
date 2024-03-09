@@ -19,4 +19,6 @@ public class UpdateCartRequest {
     @PositiveOrZero(message = "Quantity must be greater than or equal to zero.")
     @NotNull(message = "Quantity must not be null.")
     private Integer quantity;
+    @PositiveOrZero(message = "QuantityAdd must be greater than or equal to zero.")
+    private Integer quantityAdd;
 }

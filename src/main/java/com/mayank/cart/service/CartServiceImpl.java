@@ -37,6 +37,7 @@ public class CartServiceImpl implements CartService{
             Cart cart = getCartByUserEmail(userEmail);
             String productId = request.getProductId();
             Integer quantity = request.getQuantity();
+            Integer quantityAdd = request.getQuantityAdd();
             long status = 1;
             if(quantity == 0) status = cartItemRepository.deleteByProductIdAndCartId(cart.getId(), productId);
             else {
@@ -45,11 +46,17 @@ public class CartServiceImpl implements CartService{
                 if(opt.isEmpty()) {
                     item = new CartItem();
                     item.setProductId(productId);
+                    item.setQuantity(quantity);
                     item.setCart(cart);
                 } else {
                     item = opt.get();
+                    if(quantityAdd != null) {
+                        item.setQuantity(item.getQuantity() + quantityAdd);
+                    } else {
+                        item.setQuantity(quantity);
+                    }
                 }
-                item.setQuantity(quantity);
+
                 cartItemRepository.save(item);
             }
             return status != 0;
