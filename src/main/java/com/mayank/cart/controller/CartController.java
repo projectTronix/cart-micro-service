@@ -3,6 +3,7 @@ package com.mayank.cart.controller;
 import com.mayank.cart.config.UserService;
 import com.mayank.cart.dto.*;
 import com.mayank.cart.service.CartService;
+import com.mayank.cart.service.MailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -25,6 +26,7 @@ import java.util.logging.Logger;
 public class CartController {
     private final CartService cartService;
     private final UserService userService;
+    private final MailService mailService;
     private final LogManager logManager = LogManager.getLogManager();
     private final Logger logger = logManager.getLogger(Logger.GLOBAL_LOGGER_NAME);
     @PostMapping("/update")
@@ -71,6 +73,7 @@ public class CartController {
                 return new CustomResponse("Encountered a problem during checkout. -- Cart Empty", HttpStatus.OK);
             }
             logger.log(Level.INFO, "Checkout Successful.");
+            mailService.sendMail("mayankatwork06@gmail.com");
             return new CustomResponse("Checkout Successful.", HttpStatus.OK);
         } catch (Exception e) {
             logger.log(Level.WARNING, "Encountered a problem during checkout. - checkout in CartController " + e.getMessage());
