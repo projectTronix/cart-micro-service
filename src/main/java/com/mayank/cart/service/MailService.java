@@ -4,5 +4,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface MailService {
-    void sendMail(String to);
+    void sendMail(String to) throws Exception;
 }
